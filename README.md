@@ -6,10 +6,7 @@ A fully featured bash alarm clock leveraging cron
  2. [License](#2-license)
  3. [Prerequisites](#3-prerequisites)
  4. [How to use](#4-how-to-use)
- 5. [Album Art Cache](#5-album-art-cache)
- 6. [Using With Conky](#6-using-with-conky)
- 7. [Using With SXIV](#6-using-with-sxiv) 
- 8. [TODO](#8-todo)
+ 5. [TODO](#5-todo)
 
 ***
 
@@ -68,7 +65,7 @@ This project is licensed under the MIT license. For the full license, see `LICEN
 
  Which calls the alarms in the case statement
 
-## 8. Todo
+## 5. Todo
 
  * Have weekends be a bit more intuititive
  * GUI (or at least non-programatically editing) interface
