@@ -47,6 +47,7 @@ This project is licensed under the MIT license. For the full license, see `LICEN
 
  * `podfox` command-line tool for podcasts, found [here](https://github.com/brtmr/podfox)
  * `gnome-schedule` if you aren't comfy with `crontab -e`, found [here](https://sourceforge.net/projects/gnome-schedule/)
+ * `cronic` to reduce cron's email output, found [here](https://habilis.net/cronic/)
 
 ## 4. How to use
 
@@ -54,6 +55,18 @@ This project is licensed under the MIT license. For the full license, see `LICEN
  * Edit your crontab using either `crontab -e` or a tool like [gnome-schedule](https://sourceforge.net/projects/gnome-schedule/) to call the script at the appropriate times. 
  * NO ARGUMENTS ARE NEEDED FOR THE ALARM FUNCTIONS, ONLY TO STOP THE ALARMS.
  
+ For example, my crontab has this section:
+
+``` 
+
+14 0 6 * * 1-5 /usr/bin/cronic /home/steven/bin/alarm                                                                                                         
+15 30 6 * * 1-5 /usr/bin/cronic /home/steven/bin/alarm  
+16 55 6 * * 1-5 /usr/bin/cronic /home/steven/bin/alarm   
+17 0 7 * * 1-5 /usr/bin/cronic /home/steven/bin/alarm   
+
+```
+
+ Which calls the alarms in the case statement
 
 ## 8. Todo
 
