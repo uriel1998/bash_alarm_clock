@@ -9,7 +9,11 @@ A fully featured bash alarm clock leveraging cron
  5. [TODO](#5-todo)
 
 ***
+<<<<<<< HEAD
 
+=======
+ 
+>>>>>>> ae8ec11 (Redoing)
 ## 1. About
 
 This is a program greatly indebted to various cron alarm clocks like [this one](https://web.archive.org/web/20080617195246/http://grimthing.com/archives/2004/01/23/cron-mp3-alarm-clock/),
