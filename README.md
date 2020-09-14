@@ -65,9 +65,14 @@ This project is licensed under the MIT license. For the full license, see `LICEN
 16 55 6 * * 1-5 /usr/bin/cronic /home/steven/bin/alarm   
 17 0 7 * * 1-5 /usr/bin/cronic /home/steven/bin/alarm   
 
-```
+``` 
 
  Which calls the alarms in the case statement
+ 
+ #Note: I added 
+`export XDG_RUNTIME_DIR="/run/user/1000"`
+to solve a problem [raised and solved here about running audio apps from cron](#https://web.archive.org/web/20080617195246/http://grimthing.com/archives/2004/01/23/cron-mp3-alarm-clock/)
+
 
 ## 5. Todo
 

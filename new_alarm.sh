@@ -4,6 +4,9 @@
 #
 # by Steven Saus
 
+# Also check other conditions - via pid files or whatever
+# like my client_ips.txt - am I home? If not, don't play the alarm
+
 ########################################################################
 # Initialize
 ########################################################################
