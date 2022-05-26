@@ -5,7 +5,12 @@ export XDG_RUNTIME_DIR="/run/user/1000"
 
 # GET CONFIG DIRECTORY
 # GET DIRECTORY FOR PID FILES
-
+ConfigDir=${XDG_CONFIG_HOME:-$HOME/.config}/bash_alarm
+ConfigFile=$ConfigDir/bash_alarm.rc
+StateDir=${XDG_STATE_HOME:-$HOME/.local/state}/bash_alarm
+if [ ! -d ${StateDir} ]; then
+    mkdir -p ${StateDir}
+fi
 
 DOW=""
 case "$(date +%w)" in 
@@ -44,7 +49,7 @@ create_alarm() {
     Alarm_Group=$(echo "${1}" | awk -F ';' 'print {3}')
     Command=$(echo "${1}" | awk -F ';' 'print {4}')
     eval "${Command}"
-    echo $! >> ${CONFIG_DIR}/${Alarm_Group}.pid
+    echo $! >> ${StateDir}/${Alarm_Group}.pid
 }
 
 alarm_check () {
