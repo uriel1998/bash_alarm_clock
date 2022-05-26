@@ -6,6 +6,9 @@ export XDG_RUNTIME_DIR="/run/user/1000"
 # GET CONFIG DIRECTORY
 # GET DIRECTORY FOR PID FILES
 ConfigDir=${XDG_CONFIG_HOME:-$HOME/.config}/bash_alarm
+if [ ! -d ${ConfigDir} ]; then
+    mkdir -p ${ConfigDir}
+fi
 ConfigFile=$ConfigDir/bash_alarm.rc
 StateDir=${XDG_STATE_HOME:-$HOME/.local/state}/bash_alarm
 if [ ! -d ${StateDir} ]; then
@@ -23,11 +26,27 @@ case "$(date +%w)" in
   6) DOW="S";;
 esac
 
+end_processes(){
+    #$1 is file to open
+    local kill_bin=$(which kill)
+    pidfile="${1}"
+    pidstring=$(cat "${pidfile}")
+    while IFS= read -r line; do
+        eval ${kill_bin} ${line}
+    done <<< "${pidstring}"
+    rm "${pidfile}"
+}
+
 kill_alarms() {
     if [ "${1}" == "all" ];then
-        # loop through .pid files and kill them all, clean up pid files
+        for file in $(/usr/bin/ls -A "${StateDir}"/*.pid)
+        do
+            end_processes ${file}
+        done
     else
-        # match string (as group name) with string.pid, kill those, clean up pid files
+        if [ -f "${StateDir}"/"${1}".pid ];then
+            end_processes "${StateDir}"/"${1}".pid
+        fi
     fi
 }
 
