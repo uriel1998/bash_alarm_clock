@@ -50,6 +50,19 @@ kill_alarms() {
     fi
 }
 
+snooze_processes(){
+    #$1 is file to open
+    local kill_bin=$(which kill)
+    pidfile="${1}"
+    pidstring=$(cat "${pidfile}")
+    while IFS= read -r line; do
+        eval ${kill_bin} ${line}
+    done <<< "${pidstring}"
+ ## TODO - change this to the STOP condition and then have it write the pid to
+ ## TIME+5m.alarm
+ 
+    rm "${pidfile}"
+}
 
 snooze_alarms() {
     # I'm not entirely sure how I'm going to do this...but maybe have a burn on 
@@ -59,9 +72,14 @@ snooze_alarms() {
     # Have a separate "pid" file for the paused alarms with the timestamp HHMM as 
     # the filename! Then have that be part of the check!
     if [ "${1}" == "all" ];then
-        # loop through .pid files and kill them all, clean up pid files
+        for file in $(/usr/bin/ls -A "${StateDir}"/*.pid)
+        do
+            snooze_processes ${file}
+        done
     else
-        # match string (as group name) with string.pid, kill those, clean up pid files
+        if [ -f "${StateDir}"/"${1}".pid ];then
+            snooze_processes "${StateDir}"/"${1}".pid
+        fi
     fi
 }
 
@@ -85,6 +103,9 @@ alarm_check () {
             create_alarm $"{line}"
         fi
     done <<< "$RC_Match_String"
+    
+    # TODO - add look for snoozed PIDs by timestamp.alarm
+    
 }
 
 show_help () {
