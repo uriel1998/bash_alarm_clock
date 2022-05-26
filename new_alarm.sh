@@ -6,6 +6,19 @@ export XDG_RUNTIME_DIR="/run/user/1000"
 # GET CONFIG DIRECTORY
 # GET DIRECTORY FOR PID FILES
 
+
+DOW=""
+case "$(date +%w)" in 
+  0) DOW="U";;
+  1) DOW="M";;
+  2) DOW="T";;
+  3) DOW="W";;
+  4) DOW="R";;
+  5) DOW="F";;
+  6) DOW="S";;
+esac
+
+
 kill_alarms() {
     if [ "${1}" == "all" ];then
         # loop through .pid files and kill them all, clean up pid files
@@ -15,14 +28,14 @@ kill_alarms() {
 }
 
 create_alarm() {
-    # already read the rc file, have this string fed directly to the 
-    # and parse with awk
-    #TIME;DOW[MTWRFSS];ALARM_GROUP;[MUSIC|SCRIPT|COMMAND]
-    # launch the command 
-    # use $! to capture the PID
-    # echo $! > /tmp/alarm_2.pid
-    # create (or append to) $ALARM_GROUP.pid 
+    
+    Alarm_Group=$(echo "${1}" | awk -F ';' 'print {3}')
+    Command=$(echo "${1}" | awk -F ';' 'print {4}')
+    eval "${Command}"
+    echo $! >> ${CONFIG_DIR}/${Alarm_Group}.pid
 }
+
+
 
 
 if [ "${1}" == "-k" ];then 
@@ -33,6 +46,9 @@ else
     RC_Match_String=sed -n '/^$NowTime/p' ${RC_FILE}
     # separate out if multi-line and run create alarm once per line
     while IFS= read -r line; do
-        create_alarm $"{line}"
+        rc_dow=$(echo "${line}" | awk -F ';' 'print {2}')
+        if [[ $rc_dow == *"$DOW"* ]]; then
+            create_alarm $"{line}"
+        fi
     done <<< "$RC_Match_String"
 fi

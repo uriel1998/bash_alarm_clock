@@ -1,4 +1,4 @@
 ########################################################################
 # Alarms
 ########################################################################
-#TIME;DOW[MTWRFSS];ALARM_GROUP;[MUSIC|SCRIPT|COMMAND]
+#TIME;DOW[UMTWRFS];ALARM_GROUP;[MUSIC|SCRIPT|COMMAND]
