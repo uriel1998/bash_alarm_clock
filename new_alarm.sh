@@ -32,6 +32,7 @@ else
     NowTime=$(date +"%H%M")
     RC_Match_String=sed -n '/^$NowTime/p' ${RC_FILE}
     # separate out if multi-line and run create alarm once per line
-    #check_time_vs_ini
-        create_alarm ${THE STRING FROM THE RC FILE}
-        #play alarm
+    while IFS= read -r line; do
+        create_alarm $"{line}"
+    done <<< "$RC_Match_String"
+fi
