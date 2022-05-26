@@ -55,6 +55,9 @@ snooze_alarms() {
     # I'm not entirely sure how I'm going to do this...but maybe have a burn on 
     # reading set of alarm files? That might also work well for being able to 
     # do one-off alarms as well. 
+    # NO! DO STOP AND RESUME COMMANDS
+    # Have a separate "pid" file for the paused alarms with the timestamp HHMM as 
+    # the filename! Then have that be part of the check!
     if [ "${1}" == "all" ];then
         # loop through .pid files and kill them all, clean up pid files
     else
