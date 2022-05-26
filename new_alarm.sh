@@ -18,7 +18,6 @@ case "$(date +%w)" in
   6) DOW="S";;
 esac
 
-
 kill_alarms() {
     if [ "${1}" == "all" ];then
         # loop through .pid files and kill them all, clean up pid files
@@ -26,6 +25,19 @@ kill_alarms() {
         # match string (as group name) with string.pid, kill those, clean up pid files
     fi
 }
+
+
+snooze_alarms() {
+    # I'm not entirely sure how I'm going to do this...but maybe have a burn on 
+    # reading set of alarm files? That might also work well for being able to 
+    # do one-off alarms as well. 
+    if [ "${1}" == "all" ];then
+        # loop through .pid files and kill them all, clean up pid files
+    else
+        # match string (as group name) with string.pid, kill those, clean up pid files
+    fi
+}
+
 
 create_alarm() {
     
@@ -35,12 +47,7 @@ create_alarm() {
     echo $! >> ${CONFIG_DIR}/${Alarm_Group}.pid
 }
 
-
-
-
-if [ "${1}" == "-k" ];then 
-    kill_alarms "${2}"
-else
+alarm_check () {
     #get_minute
     NowTime=$(date +"%H%M")
     RC_Match_String=sed -n '/^$NowTime/p' ${RC_FILE}
@@ -51,4 +58,20 @@ else
             create_alarm $"{line}"
         fi
     done <<< "$RC_Match_String"
-fi
+}
+
+show_help () {
+    echo "-c should be run for when checked by cron"
+    echo "-h is this"
+    echo "-s [all|alarm_group] [mins] - snooze that group of alarms"
+    echo "-k [all|alarm_group] - kill existing alarms"
+}
+
+case "${1}" in 
+    -k) kill_alarms "${2}" ;;
+    -s) snooze_alarms "${2}" ;;
+    -h) show_help ;;
+    -c) alarm_check ;;
+esac
+
+exit

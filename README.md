@@ -73,6 +73,7 @@ This project is licensed under the MIT license. For the full license, see `LICEN
 `export XDG_RUNTIME_DIR="/run/user/1000"`
 to solve a problem [raised and solved here about running audio apps from cron](#https://web.archive.org/web/20080617195246/http://grimthing.com/archives/2004/01/23/cron-mp3-alarm-clock/)
 
+*Use -noconsolecontrols with mplayer!*
 
 ## 5. Todo
 
