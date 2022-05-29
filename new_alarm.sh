@@ -52,12 +52,12 @@ kill_alarms() {
 
 snooze_processes(){
 
-    ### Reads PID file, uses PKILL to issue STOP command then writes those PIDs to a new HHMM.alarm file
+    ### Reads PID file, uses PKILL to issue STOP command then writes those PIDs to a new HHMM.sleep file
     local pkill_bin=$(which pkill)
     pidfile="${1}"
     eval ${pkill_bin} -STOP -F ${pidfile}
     local FutureTime=$(date --date="5 minutes" +"%H%M")
-    cat "${pidfile}" >> ${StateDir}/${FutureTime}.alarm
+    cat "${pidfile}" >> ${StateDir}/${FutureTime}.sleep
     rm "${pidfile}"
 }
 
@@ -77,6 +77,15 @@ snooze_alarms() {
 }
 
 
+wake_alarms() {
+
+    ### Reads PID file, uses PKILL to issue STOP command then writes those PIDs to a new HHMM.sleep file
+    local pkill_bin=$(which pkill)
+    pidfile="${1}"
+    eval ${pkill_bin} -CONT -F ${pidfile}
+    rm "${pidfile}"    
+}
+
 create_alarm() {
 ### Activates the alarm command and writes the spawned processes' PIDs to a groupfile    
     Alarm_Group=$(echo "${1}" | awk -F ';' 'print {3}')
@@ -86,7 +95,7 @@ create_alarm() {
 }
 
 alarm_check () {
-### Determine if alarm is set to go, or if HHMM.alarm files exist for this time, and run them
+### Determine if alarm is set to go, or if HHMM.sleep files exist for this time, and run them
 
     NowTime=$(date +"%H%M")
     RC_Match_String=sed -n '/^$NowTime/p' ${RC_FILE}
@@ -97,8 +106,10 @@ alarm_check () {
             create_alarm $"{line}"
         fi
     done <<< "$RC_Match_String"
+    if [ -f ${StateDir}/${NowTime}.sleep ];then
+        wake_alarms "${StateDir}/${NowTime}.sleep"
+    fi
     
-    # TODO - add look for snoozed PIDs by timestamp.alarm
     
 }
 
