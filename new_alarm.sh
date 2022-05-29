@@ -37,7 +37,6 @@ end_processes(){
 
 kill_alarms() {
 ### select groups of alarms and feed the PID file to the kill function
-
     if [ "${1}" == "all" ];then
         for file in $(/usr/bin/ls -A "${StateDir}"/*.pid)
         do
@@ -51,8 +50,7 @@ kill_alarms() {
 }
 
 snooze_processes(){
-
-    ### Reads PID file, uses PKILL to issue STOP command then writes those PIDs to a new HHMM.sleep file
+### Reads PID file, uses PKILL to issue STOP command then writes those PIDs to a new HHMM.sleep file
     local pkill_bin=$(which pkill)
     pidfile="${1}"
     eval ${pkill_bin} -STOP -F ${pidfile}
@@ -63,7 +61,6 @@ snooze_processes(){
 
 snooze_alarms() {
 ### Select groups of alarms and feed the PID file to the snooze function
-
     if [ "${1}" == "all" ];then
         for file in $(/usr/bin/ls -A "${StateDir}"/*.pid)
         do
@@ -78,8 +75,7 @@ snooze_alarms() {
 
 
 wake_alarms() {
-
-    ### Reads PID file, uses PKILL to issue STOP command then writes those PIDs to a new HHMM.sleep file
+### Reads PID file, uses PKILL to issue STOP command then writes those PIDs to a new HHMM.sleep file
     local pkill_bin=$(which pkill)
     pidfile="${1}"
     eval ${pkill_bin} -CONT -F ${pidfile}
@@ -96,7 +92,6 @@ create_alarm() {
 
 alarm_check () {
 ### Determine if alarm is set to go, or if HHMM.sleep files exist for this time, and run them
-
     NowTime=$(date +"%H%M")
     RC_Match_String=sed -n '/^$NowTime/p' ${RC_FILE}
     # separate out if multi-line and run create alarm once per line
@@ -121,7 +116,7 @@ show_help () {
     echo "-k [all|alarm_group] - kill existing alarms"
 }
 
-# the main process
+### the main process
 case "${1}" in 
     -k) kill_alarms "${2}" ;;
     -s) snooze_alarms "${2}" ;;
