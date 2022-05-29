@@ -104,7 +104,14 @@ alarm_check () {
     if [ -f ${StateDir}/${NowTime}.sleep ];then
         wake_alarms "${StateDir}/${NowTime}.sleep"
     fi
-    
+    # one time alarms should be with .alarm extension and format group;command
+    if [ -f ${StateDir}/${NowTime}.alarm ];then
+        while IFS= read -r line; do
+            line=";;${line}"
+            create_alarm $"{line}"
+        done <<< "${StateDir}/${NowTime}.alarm"
+        rm "${StateDir}/${NowTime}.alarm"
+    fi
     
 }
 
