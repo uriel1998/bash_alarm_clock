@@ -38,6 +38,12 @@ This project is licensed under the MIT license. For the full license, see `LICEN
 
 ### These may already be installed on your system.
 
+* `kill`
+* `pkill`
+* `date`
+* `sed`
+* `ls`
+
  * `mplayer` command-line tool for playing media. `mplayer` can be found on major Linux distributions.
 
 ### You may have to install these
@@ -48,22 +54,25 @@ This project is licensed under the MIT license. For the full license, see `LICEN
 
 ## 4. How to use
 
- * Edit the script so that the case statements match the times (and events) you want.
- * Edit your crontab using either `crontab -e` or a tool like [gnome-schedule](https://sourceforge.net/projects/gnome-schedule/) to call the script at the appropriate times. 
- * NO ARGUMENTS ARE NEEDED FOR THE ALARM FUNCTIONS, ONLY TO STOP THE ALARMS.
+* Edit the RC file and put it in $HOME/.config/bash_alarm to put your alarms there in the format:
+
+`TIME;DOW[UMTWRFS];ALARM_GROUP;[COMMAND]`
+
+e.g.
+
+`0530;MTWRF;music;/usr/bin/mplayer -noconsolecontrols -ao pulse -volume 100 -really-quiet -loop 5 "~/alarm.mp3" &
+
+The semicolon is the dividing mark; your command should **NOT** have a semicolon in it. 
+
+ * Edit your crontab using either `crontab -e` or a tool like [gnome-schedule](https://sourceforge.net/projects/gnome-schedule/) to call the script once a minute with the `-c` command line variable, e.g.
+
+`* * * * * * /usr/bin/cronic /home/steven/bin/alarm -c` 
  
- For example, my crontab has this section:
-
-``` 
-
-14 0 6 * * 1-5 /usr/bin/cronic /home/steven/bin/alarm                                                                                                         
-15 30 6 * * 1-5 /usr/bin/cronic /home/steven/bin/alarm  
-16 55 6 * * 1-5 /usr/bin/cronic /home/steven/bin/alarm   
-17 0 7 * * 1-5 /usr/bin/cronic /home/steven/bin/alarm   
-
-``` 
-
- Which calls the alarms in the case statement
+ 
+ # How to snooze
+ # How to single alarm
+ # How to skip alarm for next day (TODO)
+  
  
  #Note: I added 
 `export XDG_RUNTIME_DIR="/run/user/1000"`
