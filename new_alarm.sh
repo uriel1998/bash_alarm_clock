@@ -3,8 +3,6 @@
 export XDG_RUNTIME_DIR="/run/user/1000"
 #https://web.archive.org/web/20080617195246/http://grimthing.com/archives/2004/01/23/cron-mp3-alarm-clock/
 
-# GET CONFIG DIRECTORY
-# GET DIRECTORY FOR PID FILES
 ConfigDir=${XDG_CONFIG_HOME:-$HOME/.config}/bash_alarm
 if [ ! -d ${ConfigDir} ]; then
     mkdir -p ${ConfigDir}
@@ -27,7 +25,7 @@ case "$(date +%w)" in
 esac
 
 end_processes(){
-    #$1 is file to open
+### Reads PID file, uses KILL to kill processes
     local kill_bin=$(which kill)
     pidfile="${1}"
     pidstring=$(cat "${pidfile}")
@@ -38,6 +36,8 @@ end_processes(){
 }
 
 kill_alarms() {
+### select groups of alarms and feed the PID file to the kill function
+
     if [ "${1}" == "all" ];then
         for file in $(/usr/bin/ls -A "${StateDir}"/*.pid)
         do
@@ -51,26 +51,19 @@ kill_alarms() {
 }
 
 snooze_processes(){
-    #$1 is file to open
-    local kill_bin=$(which kill)
+
+    ### Reads PID file, uses PKILL to issue STOP command then writes those PIDs to a new HHMM.alarm file
+    local pkill_bin=$(which pkill)
     pidfile="${1}"
-    pidstring=$(cat "${pidfile}")
-    while IFS= read -r line; do
-        eval ${kill_bin} ${line}
-    done <<< "${pidstring}"
- ## TODO - change this to the STOP condition and then have it write the pid to
- ## TIME+5m.alarm
- 
+    eval ${pkill_bin} -STOP -F ${pidfile}
+    local FutureTime=$(date --date="5 minutes" +"%H%M")
+    cat "${pidfile}" >> ${StateDir}/${FutureTime}.alarm
     rm "${pidfile}"
 }
 
 snooze_alarms() {
-    # I'm not entirely sure how I'm going to do this...but maybe have a burn on 
-    # reading set of alarm files? That might also work well for being able to 
-    # do one-off alarms as well. 
-    # NO! DO STOP AND RESUME COMMANDS
-    # Have a separate "pid" file for the paused alarms with the timestamp HHMM as 
-    # the filename! Then have that be part of the check!
+### Select groups of alarms and feed the PID file to the snooze function
+
     if [ "${1}" == "all" ];then
         for file in $(/usr/bin/ls -A "${StateDir}"/*.pid)
         do
@@ -85,7 +78,7 @@ snooze_alarms() {
 
 
 create_alarm() {
-    
+### Activates the alarm command and writes the spawned processes' PIDs to a groupfile    
     Alarm_Group=$(echo "${1}" | awk -F ';' 'print {3}')
     Command=$(echo "${1}" | awk -F ';' 'print {4}')
     eval "${Command}"
@@ -93,7 +86,8 @@ create_alarm() {
 }
 
 alarm_check () {
-    #get_minute
+### Determine if alarm is set to go, or if HHMM.alarm files exist for this time, and run them
+
     NowTime=$(date +"%H%M")
     RC_Match_String=sed -n '/^$NowTime/p' ${RC_FILE}
     # separate out if multi-line and run create alarm once per line
@@ -109,12 +103,14 @@ alarm_check () {
 }
 
 show_help () {
+### Show the help
     echo "-c should be run for when checked by cron"
     echo "-h is this"
     echo "-s [all|alarm_group] [mins] - snooze that group of alarms"
     echo "-k [all|alarm_group] - kill existing alarms"
 }
 
+# the main process
 case "${1}" in 
     -k) kill_alarms "${2}" ;;
     -s) snooze_alarms "${2}" ;;
