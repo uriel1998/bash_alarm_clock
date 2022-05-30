@@ -2,3 +2,5 @@
 # Alarms
 ########################################################################
 #TIME;DOW[UMTWRFS];ALARM_GROUP;[MUSIC|SCRIPT|COMMAND]
+0500;MTWRFS;automate;/home/steven/scripts/briefing.sh &
+/usr/bin/mplayer -noconsolecontrols -ao pulse -volume 100 -really-quiet -playlist "/home/steven/briefing/play.m3u" &

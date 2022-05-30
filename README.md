@@ -16,20 +16,8 @@ A fully featured bash alarm clock leveraging cron
 This is a program greatly indebted to various cron alarm clocks like [this one](https://web.archive.org/web/20080617195246/http://grimthing.com/archives/2004/01/23/cron-mp3-alarm-clock/),
  though it has some features that those simple ones don't have.
 
-Quite simply, the script should be called from `cron` at the appropriate times 
-that it triggers the case statements in the script.  If you use the -km switch, 
-it will kill the music related alarms, if you use the -ka switch it will kill all 
-alarms.
-
-This script is more of a framework than a finished project.  Be aware.
-
 The `briefing.sh` script is described on my blog [how to get a daily briefing](https://ideatrash.net/2019/01/get-a-daily-briefing-without-big-brother.html).
 
-The various songs that are mentioned in the script can be found below:
-
-[Antartica](https://archive.org/details/jamendo-001358)
-[Gotta Get Up](https://amzn.to/2XFrpcw)
-[Goru Bihu Song](https://www.youtube.com/watch?v=UPHRDTWlMh4)
 
 ## 2. License
 
@@ -39,41 +27,51 @@ This project is licensed under the MIT license. For the full license, see `LICEN
 
 ### These may already be installed on your system.
 
-* `kill`
-* `pkill`
-* `date`
-* `sed`
-* `ls`
+* `kill` can be found on major Linux distributions.
+* `pkill` can be found on major Linux distributions.
+* `date` can be found on major Linux distributions.
+* `sed` can be found on major Linux distributions.
+* `ls` can be found on major Linux distributions.
+* `cronic` to reduce cron's email output, found [here](https://habilis.net/cronic/)
+
+### Useful tools to use with this alarm clock.
 
  * `mplayer` command-line tool for playing media. `mplayer` can be found on major Linux distributions.
-
-### You may have to install these
-
  * `podfox` command-line tool for podcasts, found [here](https://github.com/brtmr/podfox)
  * `gnome-schedule` if you aren't comfy with `crontab -e`, found [here](https://sourceforge.net/projects/gnome-schedule/)
- * `cronic` to reduce cron's email output, found [here](https://habilis.net/cronic/)
-
+ 
 ## 4. Configuration
 
-* Edit the RC file and put it in $HOME/.config/bash_alarm to put your alarms there in the format:
+### Configuration file
 
-`TIME;DOW[UMTWRFS];ALARM_GROUP;[COMMAND]`
+Edit the RC file and put it in $HOME/.config/bash_alarm to put your alarms there in the format:
+
+`24 HOUR TIME;DAY OF WEEK[UMTWRFS];ALARM GROUP;[COMMAND]`
 
 e.g.
 
 `0530;MTWRF;music;/usr/bin/mplayer -noconsolecontrols -ao pulse -volume 100 -really-quiet -loop 5 "~/alarm.mp3" &`
 
-The semicolon is the dividing mark; your command should **NOT** have a semicolon in it. 
+Would use mplayer to play an alarm at 5:30 AM every weekday, and
 
- * Edit your crontab using either `crontab -e` or a tool like [gnome-schedule](https://sourceforge.net/projects/gnome-schedule/) to call the script once a minute with the `-c` command line variable, e.g.
+`1400;US;music;/usr/bin/mplayer -noconsolecontrols -ao pulse -volume 100 -really-quiet -loop 5 "~/wave_sounds.mp3" &`
+
+would use mplayer to play a different wave-crashing sound at 2:00 PM on Sunday and Saturday.
+
+The semicolon is the dividing mark; your command should **NOT** have a semicolon in it. Right now, that means calling something like `briefing.sh` a minute or two before the playing command.
+
+### Crontab change
+
+Edit your crontab using either `crontab -e` or a tool like [gnome-schedule](https://sourceforge.net/projects/gnome-schedule/) to call the script once a minute with the `-c` command line variable, e.g.
 
 `* * * * * * /usr/bin/cronic /PATH/TO/bash_alarm.sh -c` 
-   
- #Note: I added 
-`export XDG_RUNTIME_DIR="/run/user/1000"`
-to solve a problem [raised and solved here about running audio apps from cron](#https://web.archive.org/web/20080617195246/http://grimthing.com/archives/2004/01/23/cron-mp3-alarm-clock/)
 
-*Use -noconsolecontrols with mplayer!*
+### Notes about setting up alarms
+
+I added `export XDG_RUNTIME_DIR="/run/user/1000"` to the alarm script to solve a problem [raised and solved here about running audio apps from cron](#https://web.archive.org/web/20080617195246/http://grimthing.com/archives/2004/01/23/cron-mp3-alarm-clock/).
+
+If you have problems with `mplayer` not playing, try using `-noconsolecontrols` as an argument.
+
 
 ## 5. Usage
 

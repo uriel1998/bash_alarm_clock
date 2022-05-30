@@ -138,3 +138,6 @@ case "${1}" in
 esac
 
 exit
+
+
+# TODO - I need a cleanup check for processes that have exited normally! 
