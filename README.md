@@ -5,8 +5,9 @@ A fully featured bash alarm clock leveraging cron
  1. [About](#1-about)
  2. [License](#2-license)
  3. [Prerequisites](#3-prerequisites)
- 4. [How to use](#4-how-to-use)
- 5. [TODO](#5-todo)
+ 4. [Configuration](#4-configuration)
+ 5. [Usage](#5-usage)
+ 6. [TODO](#6-todo)
 
 ***
  
@@ -52,7 +53,7 @@ This project is licensed under the MIT license. For the full license, see `LICEN
  * `gnome-schedule` if you aren't comfy with `crontab -e`, found [here](https://sourceforge.net/projects/gnome-schedule/)
  * `cronic` to reduce cron's email output, found [here](https://habilis.net/cronic/)
 
-## 4. How to use
+## 4. Configuration
 
 * Edit the RC file and put it in $HOME/.config/bash_alarm to put your alarms there in the format:
 
@@ -60,27 +61,31 @@ This project is licensed under the MIT license. For the full license, see `LICEN
 
 e.g.
 
-`0530;MTWRF;music;/usr/bin/mplayer -noconsolecontrols -ao pulse -volume 100 -really-quiet -loop 5 "~/alarm.mp3" &
+`0530;MTWRF;music;/usr/bin/mplayer -noconsolecontrols -ao pulse -volume 100 -really-quiet -loop 5 "~/alarm.mp3" &`
 
 The semicolon is the dividing mark; your command should **NOT** have a semicolon in it. 
 
  * Edit your crontab using either `crontab -e` or a tool like [gnome-schedule](https://sourceforge.net/projects/gnome-schedule/) to call the script once a minute with the `-c` command line variable, e.g.
 
-`* * * * * * /usr/bin/cronic /home/steven/bin/alarm -c` 
- 
- 
- # How to snooze
- # How to single alarm
- # How to skip alarm for next day (TODO)
-  
- 
+`* * * * * * /usr/bin/cronic /PATH/TO/bash_alarm.sh -c` 
+   
  #Note: I added 
 `export XDG_RUNTIME_DIR="/run/user/1000"`
 to solve a problem [raised and solved here about running audio apps from cron](#https://web.archive.org/web/20080617195246/http://grimthing.com/archives/2004/01/23/cron-mp3-alarm-clock/)
 
 *Use -noconsolecontrols with mplayer!*
 
-## 5. Todo
+## 5. Usage
 
- * Have weekends be a bit more intuititive
+* Running a check
+
+
+
+* Stopping alarms
+* Snoozing alarms
+
+## 6. Todo
+
+ * Way to non-manually add single-time alarms
+ * How to skip alarm for next day
  * GUI (or at least non-programatically editing) interface
