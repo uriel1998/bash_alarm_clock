@@ -79,10 +79,23 @@ to solve a problem [raised and solved here about running audio apps from cron](#
 
 * Running a check
 
+Run `bash_alarm.sh -c`, either from `cron` or the commandline. 
 
+Both of these commands are intentionally slightly cumbersome, because this is 
+being used as an *alarm* clock...
 
 * Stopping alarms
+
+Run `bash_alarm.sh -k [all|group name]`. If you specify *all*, you do not need to
+specify any other group name. Otherwise, it will *only* kill alarms that are part 
+of the named group.
+
 * Snoozing alarms
+
+Run `bash_alarm.sh -s [all|group name] [snooze time in minutes]`. If you specify 
+*all*, you do not need to specify any other group name. Otherwise, it will *only* 
+snooze alarms that are part of the named group. The snooze time should *only* be 
+a whole number. If no number is specified, the snooze time is set to 5.
 
 ## 6. Todo
 

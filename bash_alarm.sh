@@ -53,22 +53,27 @@ snooze_processes(){
 ### Reads PID file, uses PKILL to issue STOP command then writes those PIDs to a new HHMM.sleep file
     local pkill_bin=$(which pkill)
     pidfile="${1}"
+    pause_time="${2}"
     eval ${pkill_bin} -STOP -F ${pidfile}
-    local FutureTime=$(date --date="5 minutes" +"%H%M")
+    local FutureTime=$(date --date="${pause_time} minutes" +"%H%M")
     cat "${pidfile}" >> ${StateDir}/${FutureTime}.sleep
     rm "${pidfile}"
 }
 
 snooze_alarms() {
 ### Select groups of alarms and feed the PID file to the snooze function
+    pause_time="${2}"
+    if [ -z $pause_time ];then
+        pause_time=5
+    fi
     if [ "${1}" == "all" ];then
         for file in $(/usr/bin/ls -A "${StateDir}"/*.pid)
         do
-            snooze_processes ${file}
+            snooze_processes ${file} ${pause_time}
         done
     else
         if [ -f "${StateDir}"/"${1}".pid ];then
-            snooze_processes "${StateDir}"/"${1}".pid
+            snooze_processes "${StateDir}"/"${1}".pid ${pause_time}
         fi
     fi
 }
@@ -126,9 +131,10 @@ show_help () {
 ### the main process
 case "${1}" in 
     -k) kill_alarms "${2}" ;;
-    -s) snooze_alarms "${2}" ;;
+    -s) snooze_alarms "${2}" "${3}";;
     -h) show_help ;;
     -c) alarm_check ;;
+    *) show_help ;;
 esac
 
 exit
