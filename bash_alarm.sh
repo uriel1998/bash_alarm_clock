@@ -95,7 +95,13 @@ create_alarm() {
     echo $! >> ${StateDir}/${Alarm_Group}.pid
 }
 
-alarm_check () {
+cleanup_check(){
+### Loops through PID files and sees if there are any that no longer exist (and then rewrites them?)
+### TODO - I need a cleanup check for processes that have exited normally! 
+}
+
+
+alarm_check() {
 ### Determine if alarm is set to go, or if HHMM.sleep files exist for this time, and run them
     NowTime=$(date +"%H%M")
     RC_Match_String=sed -n '/^$NowTime/p' ${RC_FILE}
@@ -117,7 +123,7 @@ alarm_check () {
         done <<< "${StateDir}/${NowTime}.alarm"
         rm "${StateDir}/${NowTime}.alarm"
     fi
-    
+    cleanup_check
 }
 
 show_help () {
@@ -128,6 +134,8 @@ show_help () {
     echo "-k [all|alarm_group] - kill existing alarms"
 }
 
+
+### only checking cleanup with alarm_check to avoid weird conflicts
 ### the main process
 case "${1}" in 
     -k) kill_alarms "${2}" ;;
@@ -140,4 +148,4 @@ esac
 exit
 
 
-# TODO - I need a cleanup check for processes that have exited normally! 
+
