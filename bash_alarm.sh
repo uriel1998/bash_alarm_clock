@@ -97,6 +97,17 @@ create_alarm() {
 
 cleanup_check(){
 ### Loops through PID files and sees if there are any that no longer exist (and then rewrites them?)
+    for pidfile in $(/usr/bin/ls -A "${StateDir}"/*.pid)
+    do
+    pidstring=$(cat "${pidfile}")
+    while IFS= read -r line; do
+        exists=$(ps aux | awk '{print $2}' | grep -c ${line})
+        if [ $exists == 0 ];then
+            # remove that line somehow ?
+        fi
+    done <<< "${pidstring}"
+
+    done
 ### TODO - I need a cleanup check for processes that have exited normally! 
 }
 
